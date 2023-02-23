@@ -89,7 +89,7 @@ self.addEventListener('fetch', function(event) {
         if (response) {
           return response;
         } else {
-          return fetch(event.request).then(function(response) {
+            return fetch(event.request).then(function(response) {
             // Clone the response before reading its body
             var responseToCache = response.clone();
   

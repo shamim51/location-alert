@@ -54,16 +54,21 @@
     //     alert('You have exited the geofenced area');
     // });
 
+    var initialMarker;
+
     navigator.geolocation.getCurrentPosition((position)=>{
-        L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+       initialMarker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
     }, (err)=>{
         console.log("hello");
     });
 
    
     var ignitor = 0;
+
     var desMarker;
     var currentLocationMarker;
+
+    var circle;
 
 
 
@@ -128,6 +133,10 @@
 
         console.log("ignitor: "+ignitor);
 
+        if(initialMarker){
+            map.removeLayer(initialMarker);
+        }
+
         if(currentLocationMarker){
             console.log("marker are there");
             map.removeLayer(currentLocationMarker);
@@ -135,7 +144,11 @@
 
         currentLocationMarker = L.marker([current_lat, current_lng]).addTo(map);
 
-        var circle = L.circle([current_lat, current_lng], {
+        if(circle){
+            circle.remove();
+        }
+
+        circle = L.circle([current_lat, current_lng], {
             color: 'red',
             fillColor: '#f03',
             fillOpacity: 0.1,
