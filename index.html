@@ -35,6 +35,14 @@
 </body>
 
 <script>
+
+    var initialMarker;
+
+    navigator.geolocation.getCurrentPosition((position)=>{
+       initialMarker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+    }, (err)=>{
+        console.log("hello");
+    });
     var map = L.map('map').setView([23.788212, 90.399971], 13);
 
     var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxNativeZoom: 19, 
@@ -54,13 +62,7 @@
     //     alert('You have exited the geofenced area');
     // });
 
-    var initialMarker;
-
-    navigator.geolocation.getCurrentPosition((position)=>{
-       initialMarker = L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
-    }, (err)=>{
-        console.log("hello");
-    });
+    
 
    
     var ignitor = 0;
@@ -142,6 +144,8 @@
             map.removeLayer(currentLocationMarker);
         }
 
+        //L.map('map').setView([23.788212, 90.399971], 13)
+        map.setView([current_lat, current_lng]);
         currentLocationMarker = L.marker([current_lat, current_lng]).addTo(map);
 
         if(circle){
