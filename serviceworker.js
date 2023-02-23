@@ -1,3 +1,5 @@
+//v2
+
 const assets = ["/", "style.css", "sw-register.js", "chainsaw-04.mp3", "icons", "app.webmanifest"];
 
 self.addEventListener("install", event => {
@@ -8,7 +10,6 @@ self.addEventListener("install", event => {
     );
 });
 
-/*
 // State while revalidate strategy
 self.addEventListener('fetch', event => {
     event.respondWith(
@@ -18,6 +19,7 @@ self.addEventListener('fetch', event => {
                 // and update the cache for future usage
                 const fetchPromise = fetch(event.request).then(
                      networkResponse => {
+                        //var responseToCache = networkResponse.clone();
                         caches.open("assets").then( cache => {
                             cache.put(event.request, networkResponse.clone());
                             return networkResponse;
@@ -27,7 +29,7 @@ self.addEventListener('fetch', event => {
                 return cachedResponse || fetchPromise; // cached or a network fetch
             })
         );
-    }); */
+    }); 
 
 /*
 self.addEventListener("fetch", event => {
@@ -67,7 +69,7 @@ self.addEventListener('fetch', function(event) {
         })
     );
   });
-*/
+
   self.addEventListener('fetch', function(event) {
     event.respondWith(
       caches.match(event.request).then(function(response) {
@@ -88,4 +90,4 @@ self.addEventListener('fetch', function(event) {
       })
     );
   });
-  
+  */
