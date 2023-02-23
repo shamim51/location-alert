@@ -88,7 +88,7 @@
             var dis = distance(current_lat, e_lat, currnt_lng, e_lng);
             console.log("current distance:"+ dis);
 
-            popup.setLatLng([current_lat, currnt_lng]).setContent("distance between you and destination"+dis).openOn(map);
+            //popup.setLatLng([current_lat, currnt_lng]).setContent("distance between you and destination"+dis).openOn(map);
 
             if(dis<1){
                 var alertSound = new Audio('steam-locomotive.mp3');
