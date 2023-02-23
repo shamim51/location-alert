@@ -16,7 +16,9 @@
     crossorigin=""></script>
 
     
+    <link rel="manifest" href="app.webmanifest">
 
+    <script src="sw-register.js"></script>
 
     <!-- Leaflet Geofence plugin -->
     <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet-geofence@1.0.1/dist/leaflet-geofence.min.css" />
@@ -67,22 +69,32 @@
     function success(pos){
         //let lat, lng;
         current_lat = pos.coords.latitude;
-        console.log(current_lat);
+        console.log("current latitude: " + current_lat);
         
         currnt_lng = pos.coords.longitude;
-        console.log(currnt_lng);
+        console.log("current longtitude: "+currnt_lng);
 
         const accuracy = pos.coords.accuracy;
         //console.log(accuracy);
 
-        console.log(ignitor);
+        console.log("ignitor: "+ignitor);
+
+        marker = L.marker([current_lat, currnt_lng]).addTo(map);
+
+        var popup = L.popup();
+        
 
         if(ignitor == 1){
             var dis = distance(current_lat, e_lat, currnt_lng, e_lng);
-            console.log(dis);
+            console.log("current distance:"+ dis);
 
-            var alertSound = new Audio('steam-locomotive.mp3');
-            alertSound.play();
+            popup.setLatLng([current_lat, currnt_lng]).setContent("distance between you and destination"+dis).openOn(map);
+
+            if(dis<1){
+                var alertSound = new Audio('steam-locomotive.mp3');
+                alertSound.play();
+            }
+           
         }
             
         
@@ -105,7 +117,7 @@
             alert("please allow location access");
         }
         else{
-            alert("can't get final location");
+            alert("can't get location");
         }
 
 
@@ -162,7 +174,7 @@
     }
 
 
-    setInterval(getLocation, 30000);
+    setInterval(getLocation, 20000);
 
     
 
