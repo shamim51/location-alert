@@ -30,7 +30,8 @@
 </head>
 <body>
     <div id="map"></div>
-   
+    <button onclick="getLocation()">Grant Location Access</button>
+
 </body>
 
 <script>
@@ -53,16 +54,64 @@
     //     alert('You have exited the geofenced area');
     // });
 
+    navigator.geolocation.getCurrentPosition((position)=>{
+        L.marker([position.coords.latitude, position.coords.longitude]).addTo(map);
+    }, (err)=>{
+        console.log("hello");
+    });
+
    
     var ignitor = 0;
+    var desMarker;
+    var currentLocationMarker;
+
+
+
+
+    var current_lat, current_lng;
+    var e_lat, e_lng;
+
+
 
     function getLocation() {
-        navigator.geolocation.watchPosition(success, error);
+  // Check if geolocation is supported
+        if (navigator.geolocation) {
+            // Request permission to access user's location
+            navigator.permissions.query({name:'geolocation'}).then(function(result) {
+            if (result.state === 'granted') {
+                // If permission is granted, continuously watch user's position
+                console.log("granted");
+                navigator.geolocation.watchPosition(success, error);
+            } else if (result.state === 'prompt') {
+                // If permission is not granted or denied, prompt user to grant permission
+                navigator.geolocation.getCurrentPosition(success, error);
+            } else if (result.state === 'denied') {
+                // If permission is denied, show an error message to the user
+                console.log('Geolocation permission denied');
+            }
+            });
+        } else {
+            // If geolocation is not supported, show an error message to the user
+            console.log('Geolocation is not supported by this browser');
+        }
     }
 
+    /*
+    function success(position) {
+        // Update user's position on the map
+    }
 
-    var current_lat, currnt_lng;
-    var e_lat, e_lng;
+    function error(error) {
+        // Show an error message to the user
+    }*/
+
+    // Call getLocation() function to request permission and watch user's position
+    //getLocation();
+
+
+    // function getLocation() {
+    //     navigator.geolocation.getCurrentPosition(success, error);
+    // }
 
 
 
@@ -71,27 +120,39 @@
         current_lat = pos.coords.latitude;
         console.log("current latitude: " + current_lat);
         
-        currnt_lng = pos.coords.longitude;
-        console.log("current longtitude: "+currnt_lng);
+        current_lng = pos.coords.longitude;
+        console.log("current longtitude: "+current_lng);
 
         const accuracy = pos.coords.accuracy;
         //console.log(accuracy);
 
         console.log("ignitor: "+ignitor);
 
-        marker = L.marker([current_lat, currnt_lng]).addTo(map);
+        if(currentLocationMarker){
+            console.log("marker are there");
+            map.removeLayer(currentLocationMarker);
+        }
 
-        var popup = L.popup();
+        currentLocationMarker = L.marker([current_lat, current_lng]).addTo(map);
+
+        var circle = L.circle([current_lat, current_lng], {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.1,
+            radius: 150
+        }).addTo(map);
+
+        //var popup = L.popup();
         
 
         if(ignitor == 1){
-            var dis = distance(current_lat, e_lat, currnt_lng, e_lng);
+            var dis = distance(current_lat, e_lat, current_lng, e_lng);
             console.log("current distance:"+ dis);
 
             //popup.setLatLng([current_lat, currnt_lng]).setContent("distance between you and destination"+dis).openOn(map);
 
             if(dis<1){
-                var alertSound = new Audio('steam-locomotive.mp3');
+                var alertSound = new Audio('chainsaw-04.mp3');
                 alertSound.play();
             }
            
@@ -125,17 +186,28 @@
 
     map.on('click', onMapClick);
 
+    var desIcon = L.icon({
+    iconUrl: 'icons/desicon2.png',
+    //shadowUrl: 'leaf-shadow.png',
+
+    iconSize:     [18, 50], // size of the icon
+    shadowSize:   [50, 64], // size of the shadow
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    shadowAnchor: [4, 62],  // the same for the shadow
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+
     function onMapClick(e) {
         
         e_lat = e.latlng.lat;
         e_lng = e.latlng.lng;
 
-        if(marker){
-            map.removeLayer(marker);
+        if(desMarker){
+            map.removeLayer(desMarker);
             // map.removeLayer(circle);
         }
-        alert("You clicked the map at " + e.latlng);
-        var marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+        //alert("You clicked the map at " + e.latlng);
+        desMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
 
         ignitor = 1;
 
@@ -173,8 +245,10 @@
         return(c * r);
     }
 
+    console.log("------------------------");
 
-    setInterval(getLocation, 20000);
+
+    setInterval(getLocation, 34000);
 
     
 

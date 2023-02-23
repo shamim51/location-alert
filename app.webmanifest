@@ -7,7 +7,7 @@
     "display": "standalone",
     "icons": [
         {
-            "src": "icons/icon-512.png",
+            "src": "icons/images.png",
             "sizes": "512x512",
             "type": "image/png"
         },
@@ -17,7 +17,7 @@
             "type": "image/png"
         },
         {
-            "src": "icons/icon-maskable.png",
+            "src": "icons/images.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "maskable"
