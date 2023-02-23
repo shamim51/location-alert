@@ -40,7 +40,34 @@
     var map = L.map('map').setView([23.788212, 90.399971], 13);
 
     var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxNativeZoom: 19, 
-    maxZoom: 20 }).addTo(map);
+    maxZoom: 20 });
+
+    var barikoi = L.tileLayer('https://travel.map.barikoi.com/styles/barikoi/{z}/{x}/{y}.png?key=NDMwMjo0WFFXS1FNM1Qw');
+
+    /*L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+    */
+    
+    var CyclOSM = L.tileLayer('https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', {
+	maxZoom: 20}).addTo(map);
+
+    var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash;'
+    });
+
+    var baseMaps = {
+        "CycleOsm":CyclOSM,
+        "Barikoi Map":barikoi,
+        "OpenStreetMap": osm,
+        
+        "satelite": Esri_WorldImagery,
+      
+    //"crime": crimes
+    
+    };
+
+    var layerControl = L.control.layers(baseMaps).addTo(map);
 
     // var circle = L.geofence.circle([23.788212, 90.399971], 500, {
     //     fillColor: '#ff0000',
