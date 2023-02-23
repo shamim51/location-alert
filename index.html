@@ -19,9 +19,9 @@
 
 
     <!-- Leaflet Geofence plugin -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-geofence@1.0.1/dist/leaflet-geofence.min.css" />
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet-geofence@1.0.1/dist/leaflet-geofence.min.css" />
 
-    <script src="https://unpkg.com/leaflet-geofence@1.0.1/dist/leaflet-geofence.min.js"></script>
+    <script src="https://unpkg.com/leaflet-geofence@1.0.1/dist/leaflet-geofence.min.js"></script> -->
 
     <link rel="stylesheet" href="style.css">
 
@@ -51,14 +51,122 @@
     //     alert('You have exited the geofenced area');
     // });
 
-    function onMapClick(e) {
-    
-    alert("You clicked the map at " + e.latlng);
-    var marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
-    
-}
+   
+    var ignitor = 0;
+
+    function getLocation() {
+        navigator.geolocation.watchPosition(success, error);
+    }
+
+
+    var current_lat, currnt_lng;
+    var e_lat, e_lng;
+
+
+
+    function success(pos){
+        //let lat, lng;
+        current_lat = pos.coords.latitude;
+        console.log(current_lat);
+        
+        currnt_lng = pos.coords.longitude;
+        console.log(currnt_lng);
+
+        const accuracy = pos.coords.accuracy;
+        //console.log(accuracy);
+
+        console.log(ignitor);
+
+        if(ignitor == 1){
+            var dis = distance(current_lat, e_lat, currnt_lng, e_lng);
+            console.log(dis);
+
+            var alertSound = new Audio('steam-locomotive.mp3');
+            alertSound.play();
+        }
+            
+        
+
+        /*
+        if(marker){
+            map.removeLayer(marker);
+            // map.removeLayer(circle);
+        }
+        marker = L.marker([lat, lng]).addTo(map);*/
+        //circle = L.circle([lat, lng], {radius : accuracy}).addTo(map);
+
+        //map.fitBounds(circle.getBounds())
+
+
+    }
+
+    function error(err){
+        if(err.code === 1){
+            alert("please allow location access");
+        }
+        else{
+            alert("can't get final location");
+        }
+
+
+    }
 
     map.on('click', onMapClick);
+
+    function onMapClick(e) {
+        
+        e_lat = e.latlng.lat;
+        e_lng = e.latlng.lng;
+
+        if(marker){
+            map.removeLayer(marker);
+            // map.removeLayer(circle);
+        }
+        alert("You clicked the map at " + e.latlng);
+        var marker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+
+        ignitor = 1;
+
+        
+
+
+    }
+
+    function distance(lat1,
+                     lat2, lon1, lon2)
+    {
+   
+        // The math module contains a function
+        // named toRadians which converts from
+        // degrees to radians.
+        lon1 =  lon1 * Math.PI / 180;
+        lon2 = lon2 * Math.PI / 180;
+        lat1 = lat1 * Math.PI / 180;
+        lat2 = lat2 * Math.PI / 180;
+   
+        // Haversine formula
+        let dlon = lon2 - lon1;
+        let dlat = lat2 - lat1;
+        let a = Math.pow(Math.sin(dlat / 2), 2)
+                 + Math.cos(lat1) * Math.cos(lat2)
+                 * Math.pow(Math.sin(dlon / 2),2);
+               
+        let c = 2 * Math.asin(Math.sqrt(a));
+   
+        // Radius of earth in kilometers. Use 3956
+        // for miles
+        let r = 6371;
+   
+        // calculate the result
+        return(c * r);
+    }
+
+
+    setInterval(getLocation, 30000);
+
+    
+
+   
 
     // var popup = L.popup();
 
