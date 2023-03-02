@@ -1,6 +1,6 @@
 //v2
 
-const assets = ["/", "style.css", "sw-register.js", "chainsaw-04.mp3", "icons", "app.webmanifest"];
+const assets = ["/", "app.js", "style.css", "sw-register.js", "chainsaw-04.mp3", "icons", "app.webmanifest"];
 
 self.addEventListener("install", event => {
     event.waitUntil(
